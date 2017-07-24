@@ -96,7 +96,7 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			readAndSendImage(modelOutputPath,imageName);
+			readAndSendImage(modelOutputPath,imageName, combineDataAndSend);
 		}
 	});
 }
