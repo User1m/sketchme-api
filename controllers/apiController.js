@@ -9,15 +9,7 @@ const PIX_PATH = "/home/user1m/workspace/sketch2pix";
 const id = uuidv4();
 
 function saveImageToDisk(data) {
-	//	var base64Data,
-	var binaryData;
-
-	//	base64Data  =   data.replace(/^data:image\/png;base64,/, "");
-	//	base64Data  =   data.replace(/^data:([A-Za-z-+\/]+);base64,(.+)$/, "");
-	//	base64Data  +=  base64Data.replace('+', ' ');
-	//	binaryData  =   new Buffer(base64Data, 'base64').toString('binary');
-
-	shell.cd(`${API_PATH}/uploads/${id}`)
+	shell.cd(`${API_PATH}/uploads/${id}/image`)
 	fs.writeFile(`${id}.jpg`, data, "binary", function (err) {
 		if (err) {
 			console.log(err);
@@ -25,11 +17,17 @@ function saveImageToDisk(data) {
 			console.log(`${id}: IMAGE SAVED`);
 		}
 	});
-	shell.cd(WORKSPACE_PATH)
+	shell.cd(WORKSPACE_PATH);
+}
+
+function executeSketchScript(){
+	shell.cd(PIX_PATH);
+	shell.exec(`./dataset/sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`)
+	shell.cd(WORKSPACE_PATH);
 }
 
 exports.generate_sketch = function (req, res, next) {
-	shell.mkdir("-p", `${API_PATH}/uploads/${id}`)
+	shell.mkdir("-p", `${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`)
 	var contentType = req.headers['content-type'] || '';
    	var mime = contentType.split(';')[0];
 	if (req.method == 'POST' && mime == 'application/octet-stream') {
@@ -49,6 +47,8 @@ exports.generate_sketch = function (req, res, next) {
 
 		req.on('end', function () {
 			saveImageToDisk(data);
+			executeSketchScript();
+
 			res.send(`Done`);
 			next();
 		});
