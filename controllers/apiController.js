@@ -59,7 +59,7 @@ function executeSketchScript(){
 		} else{
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
 			if (apiRoute == apiSketch) {
-				readAndSendImage(edgePath,imageName);
+				readAndSendImage(edgePath);
 			} else if (apiRoute == apiModel) {
 				runCombineScript();
 			}
@@ -96,42 +96,48 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			readAndSendImage(modelOutputPath,imageName, combineDataAndSend);
+			readAndSendImage(modelOutputPath, combineDataAndSend);
 		}
 	});
 }
 
 function combineDataAndSend(data1){
 	shell.cd(edgePath);
-	fs.readFile(`${image}`, 'binary', function(err, data) {
-		if (err) { 
-			throw err;
-			console.log("ERROR!!! COMBINING IMAGE FILES.....");
-		} else {
-			console.log("FINISH COMBINING IMAGE FILES.....");
-			resAlias.setHeader('Content-Type', 'image/jpg');
-			resAlias.writeHead(200);
-			var base64Image = new Buffer(data, 'binary').toString('base64');
-			base64Image = base64Image + "," + data1;
-			resAlias.end(base64Image); // Send the file data to the browser.
-			// if (apiRoute == apiModel){
-			// 	shell.rm('-rf', imageUploadDir);
-			// 	shell.rm('-rf', resultsPath);
-			// } else if (apiRoute == apiSketch) {
-			// 	shell.rm('-rf', imageUploadDir);
-			// }
+	fs.stat(imageName, function(err, stat) {
+		if(err == null) { //exists
+			console.log(`${imageName} EXISTS.....`);
+			fs.readFile(`${imageName}`, 'binary', function(err, data) {
+				if (err) { 
+					throw err;
+					console.log("ERROR!!! COMBINING IMAGE FILES.....");
+				} else {
+					console.log("FINISH COMBINING IMAGE FILES.....");
+					resAlias.setHeader('Content-Type', 'image/jpg');
+					resAlias.writeHead(200);
+					var base64Image = new Buffer(data, 'binary').toString('base64');
+					base64Image = base64Image + "," + data1;
+					resAlias.end(base64Image); // Send the file data to the browser.
+					// if (apiRoute == apiModel){
+					// 	shell.rm('-rf', imageUploadDir);
+					// 	shell.rm('-rf', resultsPath);
+					// } else if (apiRoute == apiSketch) {
+					// 	shell.rm('-rf', imageUploadDir);
+					// }
+				}
+			});	
+		} else if(err.code == 'ENOENT') { //doesn't
+			console.log(`${imageName} DOESN'T EXISTS.....`);
 		}
-	});	
+	});
 }
 
-
-function readAndSendImage(dir, image, cb){
+function readAndSendImage(dir, cb){
 	console.log("READING IMAGE FILE.....");
 	shell.cd(dir);
-	fs.stat(image, function(err, stat) {
+	fs.stat(imageName, function(err, stat) {
 		if(err == null) { //exists
-			console.log(`${image} EXISTS.....`);
-			fs.readFile(`${image}`, 'binary', function(err, data) {
+			console.log(`${imageName} EXISTS.....`);
+			fs.readFile(`${imageName}`, 'binary', function(err, data) {
 				if (err) { 
 					throw err;
 					console.log("ERROR!!! READING IMAGE FILE.....");
@@ -148,7 +154,7 @@ function readAndSendImage(dir, image, cb){
 				}
 			});	
 		} else if(err.code == 'ENOENT') { //doesn't
-			console.log(`${image} DOESN'T EXISTS.....`);
+			console.log(`${imageName} DOESN'T EXISTS.....`);
 		}
 	});
 }
