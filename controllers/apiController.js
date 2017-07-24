@@ -24,7 +24,7 @@ function saveImageToDisk(data) {
 	});
 }
 
-function executeSketchScript(){
+function executeSketchScript(res){
 	console.log("RUNNING SKETCH SCRIPT.....");
 	//must include pythonPath or python will fail "No Module Named X Found"
 	var options = {
@@ -39,6 +39,7 @@ function executeSketchScript(){
 			throw err;
 			console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
 		} else{
+			readAndSendSketch(res);
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
 		};
 		shell.cd(WORKSPACE_PATH);
@@ -86,8 +87,7 @@ exports.generate_sketch = function (req, res, next) {
 		req.on('end', function () {
 			console.log("FINISH PROCESSING IMAGE RAW DATA.....");
 			saveImageToDisk(data);
-			executeSketchScript();
-			readAndSendSketch(res);
+			executeSketchScript(res);
 			next();
 		});
 	}
