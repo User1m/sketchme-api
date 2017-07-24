@@ -13,19 +13,20 @@ function saveImageToDisk(data) {
 	shell.cd(`${API_PATH}/uploads/${id}/image`)
 	fs.writeFile(`${id}.jpg`, data, "binary", function (err) {
 		if (err) {
+			console.log("ERROR!!! SAVING IMAGE TO DISK.....");
 			console.log(err);
 		} else {
+			console.log("FINISH SAVING IMAGE TO DISK.....");
 			console.log(`${id}: IMAGE SAVED`);
+			shell.cd(WORKSPACE_PATH);
 		}
 	});
-	console.log("FINISH SAVING IMAGE TO DISK.....");
-	shell.cd(WORKSPACE_PATH);
 }
 
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
-	shell.cd(PIX_PATH);
-	shell.exec(`./dataset/sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
+	shell.cd(`${PIX_PATH}/dataset`);
+	shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
 	console.log("FINISH RUNNING SKETCH SCRIPT.....");
 	shell.cd(WORKSPACE_PATH);
 }
@@ -41,7 +42,6 @@ exports.generate_sketch = function (req, res, next) {
 
 		req.on('data', function (chunk) {
 			data += chunk;
-
 			// 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
 			if (data.length > (10 * Math.pow(10, 6))) {
 				console.log("TOO MUCH DATA.....KILLING CONNECTION");
@@ -54,15 +54,10 @@ exports.generate_sketch = function (req, res, next) {
 			console.log("FINISH PROCESSING IMAGE RAW DATA.....");
 			saveImageToDisk(data);
 			executeSketchScript();
-
 			res.send(`Done`);
 			next();
 		});
 	}
-	//	res.send("Hello Sketch");
-	//	function puts(error, stdout, stderr) { sys.puts(stdout) }
-	//	exec("ls -la", puts);
-
 	//  Task.find({}, function(err, task) {
 	//    if (err)
 	//      res.send(err);
