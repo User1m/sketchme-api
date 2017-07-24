@@ -57,7 +57,7 @@ function readAndSendSketch(res){
 				console.log("ERROR!!! READING SKETCH FILE.....");
 			} else {
 				console.log("FINISH READING SKETCH FILE.....");
-				// res.setHeader('Content-Type', 'image/jpeg');
+				res.setHeader('Content-Type', 'image/jpg');
 				res.writeHead(200);
 				res.end(data, 'binary'); // Send the file data to the browser.
 			}
