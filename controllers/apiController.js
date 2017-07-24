@@ -26,7 +26,7 @@ function saveImageToDisk(data) {
 
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
-	PythonShell.run(`${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py ${API_PATH}/uploads/${id}/image ${API_PATH}/uploads/${id}/face ${API_PATH}/uploads/${id}/sketch`, function (err) {
+	PythonShell.run(`/${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py ${API_PATH}/uploads/${id}/image ${API_PATH}/uploads/${id}/face ${API_PATH}/uploads/${id}/sketch`, function (err) {
 		if (err) throw err;
 		console.log('finished');
 	});
