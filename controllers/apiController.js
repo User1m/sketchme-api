@@ -36,9 +36,7 @@ function executeSketchScript(){
      var output = "";
      python.stdout.on('data', function(data){ output += data });
      python.on('close', function(code){ 
-		if (code !== 0) {  
-           return res.send(500, code); 
-	   }
+		console.log(code);
 		console.log("FINISH RUNNING SKETCH SCRIPT.....");
 		console.log(output);
     //    return res.send(200, output);
