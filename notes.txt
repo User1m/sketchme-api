@@ -1,0 +1,6 @@
+https://www.codementor.io/olatundegaruba/nodejs-restful-apis-in-10-minutes-q0sgsfhbd
+/^data:([A-Za-z-+\/]+);base64,(.+)$/
+
+curl -i -X POST -H "Content-Type: multipart/form-data"-F "data=@163385.jpg" http://localhost:3000/sketch
+
+curl -v -i -X POST -H "Content-Type: multipart/form-data" -F "data=@/home/user1m/workspace/api/uploads/163385.jpg" http://localhost:3000/sketch
