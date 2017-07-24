@@ -26,21 +26,7 @@ function saveImageToDisk(data) {
 
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
-	// var python = require('child_process').spawn(
-    //  'python',
-    //  [`${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py`,
-	// `${API_PATH}/uploads/${id}/image`,
-	// `${API_PATH}/uploads/${id}/face`,
-	// `${API_PATH}/uploads/${id}/sketch`]
-    //  );
-    //  var output = "";
-    //  python.stdout.on('data', function(data){ output += data });
-    //  python.on('close', function(code){ 
-	// 	console.log(code);
-	// 	console.log("FINISH RUNNING SKETCH SCRIPT.....");
-	// 	console.log(output);
-    // //    return res.send(200, output);
-    //  });
+	//must include pythonPath or python will fail "No Module Named X Found"
 	var options = {
 		pythonPath: '/home/user1m/anaconda3/bin/python',
 		pythonOptions: ['-u'],
@@ -57,8 +43,22 @@ function executeSketchScript(){
 		};
 		shell.cd(WORKSPACE_PATH);
 	});
-	// shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
+}
 
+function readAndSendSketch(res){
+	console.log("READING SKETCH FILE.....");
+	shell.cd(`${API_PATH}/uploads/${id}/sketch`)
+	fs.readFile(`${id}.jpg`, function(err, data) {
+		shell.cd(WORKSPACE_PATH)
+		if (err) { 
+			throw err;
+			console.log("ERROR!!! READING SKETCH FILE.....");
+		} else {
+			console.log("FINISH READING SKETCH FILE.....");
+			res.writeHead(200, {'Content-Type': 'image/jpeg'});
+			res.end(data); // Send the file data to the browser.
+		}
+	});
 }
 
 exports.generate_sketch = function (req, res, next) {
@@ -84,7 +84,7 @@ exports.generate_sketch = function (req, res, next) {
 			console.log("FINISH PROCESSING IMAGE RAW DATA.....");
 			saveImageToDisk(data);
 			executeSketchScript();
-			res.send(`Done`);
+			readAndSendSketch(res);
 			next();
 		});
 	}
