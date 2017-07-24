@@ -26,21 +26,38 @@ function saveImageToDisk(data) {
 
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
-	var options = {
-		pythonOptions: ['-u'],
-		args: [`${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`]
-	};
-	shell.cd(`${PIX_PATH}/dataset/PencilSketch/`)
-	PythonShell.run("gen_sketch_and_gen_resized_face.py", options, 
-	function (err) {
-		if (err){ 
-			throw err;
-			console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
-		} else{
-			console.log("FINISH RUNNING SKETCH SCRIPT.....");
-		};
-		shell.cd(WORKSPACE_PATH);
-	});
+	var python = require('child_process').spawn(
+     'python',
+     [`${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py`,
+	`${API_PATH}/uploads/${id}/image`,
+	`${API_PATH}/uploads/${id}/face`,
+	`${API_PATH}/uploads/${id}/sketch`]
+     );
+     var output = "";
+     python.stdout.on('data', function(data){ output += data });
+     python.on('close', function(code){ 
+		if (code !== 0) {  
+           return res.send(500, code); 
+	   }
+		console.log("FINISH RUNNING SKETCH SCRIPT.....");
+		console.log(output);
+    //    return res.send(200, output);
+     });
+	// var options = {
+	// 	pythonOptions: ['-u'],
+	// 	args: [`${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`]
+	// };
+	// shell.cd(`${PIX_PATH}/dataset/PencilSketch/`)
+	// PythonShell.run("gen_sketch_and_gen_resized_face.py", options, 
+	// function (err) {
+	// 	if (err){ 
+	// 		throw err;
+	// 		console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
+	// 	} else{
+			// console.log("FINISH RUNNING SKETCH SCRIPT.....");
+	// 	};
+	// 	shell.cd(WORKSPACE_PATH);
+	// });
 	// shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
 
 }
