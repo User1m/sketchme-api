@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use(bodyParser({uploadDir:'./uploads'}));
+// app.use(bodyParser({uploadDir:'./uploads'}));
 
 var routes = require('./routes/apiRoutes');
 routes(app);
