@@ -3,16 +3,15 @@
 const uuidv4 = require('uuid/v4');
 const shell = require('shelljs');
 const fs = require('fs');
-const WORKSPACE_PATH = "/home/user1m/workspace";
-const API_PATH = "/home/user1m/workspace/api";
-const PIX_PATH = "/home/user1m/workspace/sketch2pix";
+const PythonShell = require('python-shell');
+
 const id = uuidv4();
 const imageName = `${id}.jpg`;
-var PythonShell = require('python-shell');
-const apiSketch = "/sketch", apiModel = "/model";
-var apiRoute = '';
-var resAlias = null;
-const model_gen_name = "";
+
+const WORKSPACE_PATH = "/home/user1m/workspace",
+API_PATH = "/home/user1m/workspace/api",
+PIX_PATH = "/home/user1m/workspace/sketch2pix";
+
 const imagePath = `${API_PATH}/uploads/${id}/image`,
 facePath = `${API_PATH}/uploads/${id}/face/test`,
 edgePath = `${API_PATH}/uploads/${id}/edge/test`,
@@ -20,6 +19,10 @@ face2edgePath = `${API_PATH}/uploads/${id}/face2edge/test`,
 modelOutputPath = `${PIX_PATH}/pix2pix/results/${model_gen_name}/latest_net_G_test/images/output`;
 const imageDir = `${API_PATH}/uploads/${id}/`;
 
+const apiSketch = "/sketch", apiModel = "/model";
+var apiRoute = '',
+model_gen_name = '';
+var resAlias = null;
 
 
 function saveImageToDisk(data) {
