@@ -7,6 +7,7 @@ const WORKSPACE_PATH = "/home/user1m/workspace";
 const API_PATH = "/home/user1m/workspace/api";
 const PIX_PATH = "/home/user1m/workspace/sketch2pix";
 const id = uuidv4();
+var PythonShell = require('python-shell');
 
 function saveImageToDisk(data) {
 	console.log("SAVING IMAGE TO DISK.....");
@@ -26,7 +27,11 @@ function saveImageToDisk(data) {
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
 	shell.cd(`${PIX_PATH}/dataset`);
-	shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
+	PythonShell.run(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`, function (err) {
+		if (err) throw err;
+		console.log('finished');
+	});
+	// shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
 	console.log("FINISH RUNNING SKETCH SCRIPT.....");
 	shell.cd(WORKSPACE_PATH);
 }
