@@ -31,7 +31,7 @@ function executeSketchScript(){
 		pythonOptions: ['-u'],
 		args: [`${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`]
 	};
-	PythonShell.run(`/${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py`, options, 
+	PythonShell.run(`//home/user1m/workspace/sketch2pix/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py`, options, 
 	function (err) {
 		if (err){ 
 			throw err;
