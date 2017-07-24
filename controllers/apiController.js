@@ -48,17 +48,20 @@ function executeSketchScript(){
 function readAndSendSketch(res){
 	console.log("READING SKETCH FILE.....");
 	shell.cd(`${API_PATH}/uploads/${id}/sketch`)
-	fs.readFile(`${id}.jpg`, function(err, data) {
-		if (err) { 
-			throw err;
-			console.log("ERROR!!! READING SKETCH FILE.....");
-		} else {
-			console.log("FINISH READING SKETCH FILE.....");
-			res.writeHead(200, {'Content-Type': 'image/jpeg'});
-			res.end(data); // Send the file data to the browser.
-		}
-		shell.cd(WORKSPACE_PATH)
-	});
+	if (fs.existsSync(`${id}.jpg`)) {
+		console.log(`${id}.jpg EXISTS.....`);
+		fs.readFile(`${id}.jpg`, function(err, data) {
+			if (err) { 
+				throw err;
+				console.log("ERROR!!! READING SKETCH FILE.....");
+			} else {
+				console.log("FINISH READING SKETCH FILE.....");
+				res.writeHead(200, {'Content-Type': 'image/jpeg'});
+				res.end(data); // Send the file data to the browser.
+			}
+			shell.cd(WORKSPACE_PATH)
+		});
+	} else {console.log(`${id}.jpg DOESN'T EXISTS.....`);}
 }
 
 exports.generate_sketch = function (req, res, next) {
