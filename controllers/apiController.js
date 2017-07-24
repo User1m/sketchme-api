@@ -39,8 +39,8 @@ function executeSketchScript(res){
 			throw err;
 			console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
 		} else{
-			readAndSendSketch(res);
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
+			readAndSendSketch(res);
 		};
 		shell.cd(WORKSPACE_PATH);
 	});
