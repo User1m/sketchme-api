@@ -30,22 +30,27 @@ function saveImageToDisk(data) {
 
 exports.generate_sketch = function (req, res, next) {
 	shell.mkdir("-p", `${API_PATH}/uploads/${id}`)
-	if (req.method == 'POST') {
-		var body = "";
+	var contentType = req.headers['content-type'] || '';
+   	var mime = contentType.split(';')[0];
+	if (req.method == 'POST' && mime == 'application/octet-stream') {
+		console.log("PROCESSING IMAGE.....");
+		var data = "";
+		req.setEncoding('binary');
 
-		req.on('data', function (data) {
-			body += data;
+		req.on('data', function (chunk) {
+			data += chunk;
 
 			// 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
-			if (body.length > (10 * Math.pow(10, 6))) {
+			if (data.length > (10 * Math.pow(10, 6))) {
 				res.send(`Image too large! Please upload an image under 10MB`);
 				req.connection.destroy();
 			}
 		});
 
 		req.on('end', function () {
-			saveImageToDisk(body);
+			saveImageToDisk(data);
 			res.send(`Done`);
+			next();
 		});
 	}
 	//	res.send("Hello Sketch");
