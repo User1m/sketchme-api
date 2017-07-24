@@ -108,28 +108,32 @@ function runValScript(){
 function readAndSendImage(res, dir, image){
 	console.log("READING IMAGE FILE.....");
 	shell.cd(dir);
-	if (fs.existsSync(image)) {
-		console.log(`${image} EXISTS.....`);
-		fs.readFile(`${image}`, 'binary', function(err, data) {
-			if (err) { 
-				throw err;
-				console.log("ERROR!!! READING IMAGE FILE.....");
-			} else {
-				console.log("FINISH READING IMAGE FILE.....");
-				res.setHeader('Content-Type', 'image/jpg');
-				res.writeHead(200);
-        		var base64Image = new Buffer(data, 'binary').toString('base64');
-				res.end(base64Image); // Send the file data to the browser.
-				// if (apiRoute == apiModel){
-				// 	shell.rm('-rf', imageUploadDir);
-				// 	shell.rm('-rf', resultsPath);
-				// } else if (apiRoute == apiSketch) {
-				// 	shell.rm('-rf', imageUploadDir);
-				// }
-			}
-			// shell.cd(WORKSPACE_PATH);
-		});
-	} else {console.log(`${image} DOESN'T EXISTS.....`);}
+	fs.stat(image, function(err, stat) {
+		if(err == null) { //exists
+			console.log(`${image} EXISTS.....`);
+			fs.readFile(`${image}`, 'binary', function(err, data) {
+				if (err) { 
+					throw err;
+					console.log("ERROR!!! READING IMAGE FILE.....");
+				} else {
+					console.log("FINISH READING IMAGE FILE.....");
+					res.setHeader('Content-Type', 'image/jpg');
+					res.writeHead(200);
+					var base64Image = new Buffer(data, 'binary').toString('base64');
+					res.end(base64Image); // Send the file data to the browser.
+					// if (apiRoute == apiModel){
+					// 	shell.rm('-rf', imageUploadDir);
+					// 	shell.rm('-rf', resultsPath);
+					// } else if (apiRoute == apiSketch) {
+					// 	shell.rm('-rf', imageUploadDir);
+					// }
+				}
+				// shell.cd(WORKSPACE_PATH);
+			});	
+		} else if(err.code == 'ENOENT') { //doesn't
+			console.log(`${image} DOESN'T EXISTS.....`);
+		}
+	});
 }
 
 function createFolders(){
