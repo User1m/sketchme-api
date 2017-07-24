@@ -12,16 +12,17 @@ const WORKSPACE_PATH = "/home/user1m/workspace",
 API_PATH = "/home/user1m/workspace/api",
 PIX_PATH = "/home/user1m/workspace/sketch2pix";
 
-const imagePath = `${API_PATH}/uploads/${id}/image`,
-facePath = `${API_PATH}/uploads/${id}/face/test`,
-edgePath = `${API_PATH}/uploads/${id}/edge/test`,
-face2edgePath = `${API_PATH}/uploads/${id}/face2edge/test`,
-modelOutputPath = `${PIX_PATH}/pix2pix/results/${model_gen_name}/latest_net_G_test/images/output`;
-const imageDir = `${API_PATH}/uploads/${id}/`;
+const model_gen_name = 'small_face2edge_gen';
+const imageUploadDir = `${API_PATH}/uploads/${id}`;
+const imagePath = `${imageUploadDir}/image`,
+facePath = `${imageUploadDir}/face/test`,
+edgePath = `${imageUploadDir}/edge/test`,
+face2edgePath = `${imageUploadDir}/face2edge/test`,
+resultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
+modelOutputPath = `${resultsPath}/latest_net_G_test/images/output`;
 
 const apiSketch = "/sketch", apiModel = "/model";
-var apiRoute = '',
-model_gen_name = '';
+var apiRoute = '';
 var resAlias = null;
 
 
@@ -70,7 +71,7 @@ function executeSketchScript(){
 function runCombineScript(){
 	console.log("RUNNING COMBINE SCRIPT.....");
 	shell.cd(`${PIX_PATH}/dataset/`);
-	shell.exec(`./combine.sh --path ${imageDir}`, 
+	shell.exec(`./combine.sh --path ${imageUploadDir}`, 
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
@@ -88,7 +89,7 @@ function runCombineScript(){
 function runValScript(){
 	console.log("RUNNING VAL SCRIPT.....");
 	shell.cd(PIX_PATH);
-	shell.exec(`./test.sh --data-root ${API_PATH}/uploads/${id}/face2edge --name celebfacesfull_generation --direction BtoA`,
+	shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
@@ -118,6 +119,12 @@ function readAndSendImage(res, dir, image){
 				res.writeHead(200);
         		var base64Image = new Buffer(data, 'binary').toString('base64');
 				res.end(base64Image); // Send the file data to the browser.
+				// if(apiRoute == apiModel){
+				// 	shell.rm('-rf', imageUploadDir);
+				// 	shell.rm('-rf', resultsPath);
+				// }else if (apiRoute == apiSketch) {
+				// 	shell.rm('-rf', imageUploadDir);
+				// }
 			}
 			shell.cd(WORKSPACE_PATH);
 		});
