@@ -127,7 +127,7 @@ function readAndSendImage(res, dir, image){
 					shell.rm('-rf', imageUploadDir);
 				}
 			}
-			shell.cd(WORKSPACE_PATH);
+			// shell.cd(WORKSPACE_PATH);
 		});
 	} else {console.log(`${image} DOESN'T EXISTS.....`);}
 }
