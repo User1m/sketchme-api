@@ -22,12 +22,12 @@ function saveImageToDisk(data) {
 
 function executeSketchScript(){
 	shell.cd(PIX_PATH);
-	shell.exec(`./dataset/sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`)
+	shell.exec(`./dataset/sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
 	shell.cd(WORKSPACE_PATH);
 }
 
 exports.generate_sketch = function (req, res, next) {
-	shell.mkdir("-p", `${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`)
+	shell.mkdir("-p", `${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`);
 	var contentType = req.headers['content-type'] || '';
    	var mime = contentType.split(';')[0];
 	if (req.method == 'POST' && mime == 'application/octet-stream') {
