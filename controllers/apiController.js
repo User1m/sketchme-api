@@ -119,12 +119,12 @@ function readAndSendImage(res, dir, image){
 				res.writeHead(200);
         		var base64Image = new Buffer(data, 'binary').toString('base64');
 				res.end(base64Image); // Send the file data to the browser.
-				// if(apiRoute == apiModel){
-				// 	shell.rm('-rf', imageUploadDir);
-				// 	shell.rm('-rf', resultsPath);
-				// }else if (apiRoute == apiSketch) {
-				// 	shell.rm('-rf', imageUploadDir);
-				// }
+				if(apiRoute == apiModel){
+					shell.rm('-rf', imageUploadDir);
+					shell.rm('-rf', resultsPath);
+				}else if (apiRoute == apiSketch) {
+					shell.rm('-rf', imageUploadDir);
+				}
 			}
 			shell.cd(WORKSPACE_PATH);
 		});
