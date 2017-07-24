@@ -51,18 +51,19 @@ function readAndSendSketch(res){
 	shell.cd(`${API_PATH}/uploads/${id}/sketch`);
 	if (fs.existsSync(`${id}.jpg`)) {
 		console.log(`${id}.jpg EXISTS.....`);
-		fs.readFile(`${id}.jpg`, function(err, data) {
-			if (err) { 
-				throw err;
-				console.log("ERROR!!! READING SKETCH FILE.....");
-			} else {
-				console.log("FINISH READING SKETCH FILE.....");
-				res.setHeader('Content-Type', 'image/jpg');
-				res.writeHead(200);
-				res.end(data, 'binary'); // Send the file data to the browser.
-			}
-			shell.cd(WORKSPACE_PATH)
-		});
+		var data = fs.readFileSync(`${id}.jpg`);//, 
+		// function(err, data) {
+		// 	if (err) { 
+		// 		throw err;
+		// 		console.log("ERROR!!! READING SKETCH FILE.....");
+		// 	} else {
+		console.log("FINISH READING SKETCH FILE.....");
+		res.setHeader('Content-Type', 'image/jpg');
+		res.writeHead(200);
+		res.end(data, 'binary'); // Send the file data to the browser.
+			// }
+		shell.cd(WORKSPACE_PATH);
+		// });
 	} else {console.log(`${id}.jpg DOESN'T EXISTS.....`);}
 }
 
