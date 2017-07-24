@@ -20,7 +20,8 @@ facePath = `${imageUploadDir}/face/test`,
 edgePath = `${imageUploadDir}/edge/test`,
 face2edgePath = `${imageUploadDir}/face2edge/test`,
 resultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
-modelOutputPath = `${resultsPath}/latest_net_G_test/images/output`;
+modelOutputPath = `${resultsPath}/latest_net_G_test/images/output`,
+modelInputPath = `${resultsPath}/latest_net_G_test/images/input`;
 
 const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
@@ -102,7 +103,7 @@ function runValScript(){
 }
 
 function combineDataAndSend(data1){
-	shell.cd(edgePath);
+	shell.cd(modelInputPath);
 	fs.stat(imageName, function(err, stat) {
 		if(err == null) { //exists
 			console.log(`${imageName} EXISTS.....`);
