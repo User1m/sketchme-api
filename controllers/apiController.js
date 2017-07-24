@@ -8,9 +8,10 @@ const PythonShell = require('python-shell');
 const id = uuidv4();
 const imageName = `${id}.jpg`;
 
-const WORKSPACE_PATH = "/home/user1m/workspace",
-API_PATH = "/home/user1m/workspace/api",
-PIX_PATH = "/home/user1m/workspace/sketch2pix";
+const WORKSPACE_PATH = "/home/user1m/workspace";
+
+const API_PATH = `${WORKSPACE_PATH}/api`,
+PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
 
 const model_gen_name = 'small_face2edge_gen';
 const imageUploadDir = `${API_PATH}/uploads/${id}`;
@@ -38,7 +39,7 @@ function saveImageToDisk(data) {
 			console.log(`${imageName}: IMAGE SAVED`);
 			executeSketchScript();
 		}
-		shell.cd(WORKSPACE_PATH);
+		// shell.cd(WORKSPACE_PATH);
 	});
 }
 
@@ -119,10 +120,10 @@ function readAndSendImage(res, dir, image){
 				res.writeHead(200);
         		var base64Image = new Buffer(data, 'binary').toString('base64');
 				res.end(base64Image); // Send the file data to the browser.
-				if(apiRoute == apiModel){
+				if (apiRoute == apiModel){
 					shell.rm('-rf', imageUploadDir);
 					shell.rm('-rf', resultsPath);
-				}else if (apiRoute == apiSketch) {
+				} else if (apiRoute == apiSketch) {
 					shell.rm('-rf', imageUploadDir);
 				}
 			}
