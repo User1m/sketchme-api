@@ -22,14 +22,14 @@ function saveImageToDisk(data) {
 		if (err) {
 			console.log(err);
 		} else {
-			console.log("IMAGE SAVED");
+			console.log(`${id}: IMAGE SAVED`);
 		}
 	});
 	shell.cd(WORKSPACE_PATH)
 }
 
 exports.generate_sketch = function (req, res, next) {
-	shell.mkdir("-p", `${API_PATH}/uploads/${id}`)
+	shell.mkdir("-p", `${API_PATH} / uploads / ${id}`)
 	if (req.method == 'POST') {
 		var body = "";
 
@@ -67,7 +67,7 @@ exports.generate_image_from_model = function (req, res, next) {
 
 
 exports.home = function (req, res, next) {
-	var msg = `<h1>Welcome</h1><br/><p>Apis available:</p><ul><li>post: /sketch</li><li>post: /model</li></ul>`;
+	var msg = `< h1 > Welcome</h1 > <br /> <p>Apis available:</p> <ul><li>post: /sketch</li><li>post: /model</li></ul>`;
 	res.send(msg);
 };
 
