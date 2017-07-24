@@ -26,13 +26,23 @@ function saveImageToDisk(data) {
 
 function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
-	PythonShell.run(`/${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py ${API_PATH}/uploads/${id}/image ${API_PATH}/uploads/${id}/face ${API_PATH}/uploads/${id}/sketch`, function (err) {
-		if (err) throw err;
-		console.log('finished');
+
+	var options = {
+		pythonOptions: ['-u'],
+		args: [`${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/sketch`]
+	};
+	PythonShell.run(`/${PIX_PATH}/dataset/PencilSketch/gen_sketch_and_gen_resized_face.py`, options, 
+	function (err) {
+		if (err){ 
+			throw err;
+			console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
+		} else{
+			console.log("FINISH RUNNING SKETCH SCRIPT.....");
+		};
+		shell.cd(WORKSPACE_PATH);
 	});
 	// shell.exec(`./sketch.sh --image-path ${API_PATH}/uploads/${id}/image --face-path ${API_PATH}/uploads/${id}/face --sketch-path ${API_PATH}/uploads/${id}/sketch`);
-	console.log("FINISH RUNNING SKETCH SCRIPT.....");
-	shell.cd(WORKSPACE_PATH);
+
 }
 
 exports.generate_sketch = function (req, res, next) {
