@@ -7,21 +7,31 @@ const WORKSPACE_PATH = "/home/user1m/workspace";
 const API_PATH = "/home/user1m/workspace/api";
 const PIX_PATH = "/home/user1m/workspace/sketch2pix";
 const id = uuidv4();
+const imageName = `${id}.jpg`;
 var PythonShell = require('python-shell');
 const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
 var resAlias = null;
+const model_gen_name = "";
+const imagePath = `${API_PATH}/uploads/${id}/image`,
+facePath = `${API_PATH}/uploads/${id}/face/test`,
+edgePath = `${API_PATH}/uploads/${id}/edge/test`,
+face2edgePath = `${API_PATH}/uploads/${id}/face2edge/test`,
+modelOutputPath = `${PIX_PATH}/pix2pix/results/${model_gen_name}/latest_net_G_test/images/output`;
+const imageDir = `${API_PATH}/uploads/${id}/`;
+
+
 
 function saveImageToDisk(data) {
 	console.log("SAVING IMAGE TO DISK.....");
-	shell.cd(`${API_PATH}/uploads/${id}/image`)
-	fs.writeFile(`${id}.jpg`, data, "binary", function (err) {
+	shell.cd(imagePath)
+	fs.writeFile(imageName, data, "binary", function (err) {
 		if (err) {
 			console.log("ERROR!!! SAVING IMAGE TO DISK.....");
 			console.log(err);
 		} else {
 			console.log("FINISH SAVING IMAGE TO DISK.....");
-			console.log(`${id}: IMAGE SAVED`);
+			console.log(`${imageName}: IMAGE SAVED`);
 			executeSketchScript();
 		}
 		shell.cd(WORKSPACE_PATH);
@@ -34,7 +44,7 @@ function executeSketchScript(){
 	var options = {
 		pythonPath: '/home/user1m/anaconda3/bin/python',
 		pythonOptions: ['-u'],
-		args: [`${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/edge`]
+		args: [imagePath,facePath,edgePath]
 	};
 	shell.cd(`${PIX_PATH}/dataset/PencilSketch/`)
 	PythonShell.run("gen_sketch_and_gen_resized_face.py", options, 
@@ -45,19 +55,19 @@ function executeSketchScript(){
 		} else{
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
 			if (apiRoute == apiSketch) {
-				readAndSendImage(resAlias,`${API_PATH}/uploads/${id}/edge`,`${id}.jpg`);
+				readAndSendImage(resAlias,edgePath,imageName);
 			} else if (apiRoute == apiModel) {
 				runCombineScript();
 			}
 		};
-		shell.cd(WORKSPACE_PATH);
+		// shell.cd(WORKSPACE_PATH);
 	});
 }
 
 function runCombineScript(){
 	console.log("RUNNING COMBINE SCRIPT.....");
 	shell.cd(`${PIX_PATH}/dataset/`);
-	shell.exec(`./combine.sh --path ${API_PATH}/uploads/${id}/`, 
+	shell.exec(`./combine.sh --path ${imageDir}`, 
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
@@ -68,7 +78,7 @@ function runCombineScript(){
 			console.log("FINISH RUNNING COMBINE SCRIPT.....");
 			runValScript();
 		}
-		shell.cd(WORKSPACE_PATH);
+		// shell.cd(WORKSPACE_PATH);
 	});
 }
 
@@ -84,10 +94,9 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			readAndSendImage(resAlias,
-				`${PIX_PATH}/pix2pix/results/celebfacesfull_generation/latest_net_G_test/images/output`,`${id}.jpg`);
+			readAndSendImage(resAlias,modelOutputPath,imageName);
 		}
-		shell.cd(WORKSPACE_PATH);
+		// shell.cd(WORKSPACE_PATH);
 	});
 }
 
@@ -114,10 +123,10 @@ function readAndSendImage(res, dir, image){
 
 function createFolders(){
 	shell.mkdir("-p", 
-	`${API_PATH}/uploads/${id}/image`,
-	`${API_PATH}/uploads/${id}/face`,
-	`${API_PATH}/uploads/${id}/edge`,  
-	`${API_PATH}/uploads/${id}/face2edge/test`);
+	imagePath,
+	facePath,
+	edgePath,  
+	face2edgePath);
 }
 
 function readAndProcessImage(req, res){
