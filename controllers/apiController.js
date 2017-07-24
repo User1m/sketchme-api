@@ -51,7 +51,7 @@ function readAndSendSketch(res){
 	shell.cd(`${API_PATH}/uploads/${id}/sketch`);
 	if (fs.existsSync(`${id}.jpg`)) {
 		console.log(`${id}.jpg EXISTS.....`);
-		fs.readFile(`${id}.jpg`, 'base64', function(err, data) {
+		fs.readFile(`${id}.jpg`, 'binary', function(err, data) {
 			if (err) { 
 				throw err;
 				console.log("ERROR!!! READING SKETCH FILE.....");
@@ -59,7 +59,9 @@ function readAndSendSketch(res){
 				console.log("FINISH READING SKETCH FILE.....");
 				res.setHeader('Content-Type', 'image/jpg');
 				res.writeHead(200);
-				res.end(data, 'base64'); // Send the file data to the browser.
+				//convert image file to base64-encoded string
+        		var base64Image = new Buffer(data, 'binary').toString('base64');
+				res.end(base64Image); // Send the file data to the browser.
 			}
 			shell.cd(WORKSPACE_PATH);
 		});
