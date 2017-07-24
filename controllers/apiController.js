@@ -49,7 +49,6 @@ function readAndSendSketch(res){
 	console.log("READING SKETCH FILE.....");
 	shell.cd(`${API_PATH}/uploads/${id}/sketch`)
 	fs.readFile(`${id}.jpg`, function(err, data) {
-		shell.cd(WORKSPACE_PATH)
 		if (err) { 
 			throw err;
 			console.log("ERROR!!! READING SKETCH FILE.....");
@@ -58,6 +57,7 @@ function readAndSendSketch(res){
 			res.writeHead(200, {'Content-Type': 'image/jpeg'});
 			res.end(data); // Send the file data to the browser.
 		}
+		shell.cd(WORKSPACE_PATH)
 	});
 }
 
