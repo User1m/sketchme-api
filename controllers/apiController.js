@@ -113,7 +113,11 @@ function readAndSendImage(res, dir, image){
 }
 
 function createFolders(){
-	shell.mkdir("-p", `${API_PATH}/uploads/${id}/image`,`${API_PATH}/uploads/${id}/face`,`${API_PATH}/uploads/${id}/edge`, `${API_PATH}/uploads/${id}/face2edge`);
+	shell.mkdir("-p", 
+	`${API_PATH}/uploads/${id}/image`,
+	`${API_PATH}/uploads/${id}/face`,
+	`${API_PATH}/uploads/${id}/edge`,  
+	`${API_PATH}/uploads/${id}/face2edge/test`);
 }
 
 function readAndProcessImage(req, res){

@@ -3,3 +3,7 @@ https://www.codementor.io/olatundegaruba/nodejs-restful-apis-in-10-minutes-q0sgs
 
 #Testing API via curl
 curl -v -i -X POST -H "Content-Type: multipart/form-data" -F "data=@/home/user1m/workspace/api/uploads/163385.jpg" http://localhost:3000/sketch
+
+#Rest GPU Mem
+sudo fuser -v /dev/nvidia*
+kill -9 PID
