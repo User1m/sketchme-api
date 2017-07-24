@@ -59,7 +59,7 @@ function readAndSendSketch(res){
 				console.log("FINISH READING SKETCH FILE.....");
 				res.setHeader('Content-Type', 'image/jpeg');
 				res.writeHead(200);
-				res.end(data); // Send the file data to the browser.
+				res.end(data, 'binary'); // Send the file data to the browser.
 			}
 			shell.cd(WORKSPACE_PATH)
 		});
