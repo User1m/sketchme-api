@@ -4,6 +4,7 @@ const uuidv4 = require('uuid/v4');
 const shell = require('shelljs');
 const fs = require('fs');
 const PythonShell = require('python-shell');
+const async = require('async');
 
 const id = uuidv4();
 const imageName = `${id}.jpg`;
@@ -19,9 +20,13 @@ const imagePath = `${imageUploadDir}/image`,
 facePath = `${imageUploadDir}/face/test`,
 edgePath = `${imageUploadDir}/edge/test`,
 face2edgePath = `${imageUploadDir}/face2edge/test`,
-resultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
-modelOutputPath = `${resultsPath}/latest_net_G_test/images/output`,
-modelInputPath = `${resultsPath}/latest_net_G_test/images/input`;
+pixResultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
+pixPyResultsPath = `${PIX_PATH}/results/${id}`,
+pixModelResult = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
+pixModelSketch = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
+pixPyModelRealA = `${pixPyResultsPath}/test_latest/images/${id}_real_A.png`,
+pixPyModelRealB = `${pixPyResultsPath}/test_latest/images/${id}_real_B.png`,
+pixPyModelFakeB = `${pixPyResultsPath}/test_latest/images/${id}_fake_B.png`;
 
 const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
@@ -60,7 +65,8 @@ function executeSketchScript(){
 		} else{
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
 			if (apiRoute == apiSketch) {
-				readAndSendImage(edgePath);
+				// readAndSendImage(edgePath);
+				packImages([`${edgePath}/${imageName}`], 'image/jpg');
 			} else if (apiRoute == apiModel) {
 				runCombineScript();
 			}
@@ -97,68 +103,98 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			readAndSendImage(modelOutputPath, combineDataAndSend);
+			// readAndSendImage(pixModelResult, combineDataAndSend);
+			packImages([pixModelSketch, pixModelResult], 'image/jpg');
+			// packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
 		}
 	});
 }
 
-function combineDataAndSend(data1){
-	shell.cd(modelInputPath);
-	fs.stat(imageName, function(err, stat) {
-		if(err == null) { //exists
-			console.log(`${imageName} EXISTS.....`);
-			fs.readFile(`${imageName}`, 'binary', function(err, data) {
-				if (err) { 
-					throw err;
-					console.log("ERROR!!! COMBINING IMAGE FILES.....");
-				} else {
-					console.log("FINISH COMBINING IMAGE FILES.....");
-					resAlias.setHeader('Content-Type', 'image/jpg');
-					resAlias.writeHead(200);
-					var base64Image = new Buffer(data, 'binary').toString('base64');
-					base64Image = base64Image + "," + data1;
-					resAlias.end(base64Image); // Send the file data to the browser.
-					// if (apiRoute == apiModel){
-					// 	shell.rm('-rf', imageUploadDir);
-					// 	shell.rm('-rf', resultsPath);
-					// } else if (apiRoute == apiSketch) {
-					// 	shell.rm('-rf', imageUploadDir);
-					// }
-				}
-			});	
-		} else if(err.code == 'ENOENT') { //doesn't
-			console.log(`${imageName} DOESN'T EXISTS.....`);
-		}
-	});
-}
 
-function readAndSendImage(dir, cb){
-	console.log("READING IMAGE FILE.....");
-	shell.cd(dir);
-	fs.stat(imageName, function(err, stat) {
-		if(err == null) { //exists
-			console.log(`${imageName} EXISTS.....`);
-			fs.readFile(`${imageName}`, 'binary', function(err, data) {
-				if (err) { 
-					throw err;
-					console.log("ERROR!!! READING IMAGE FILE.....");
-				} else {
-					console.log("FINISH READING IMAGE FILE.....");
-					var base64Image = new Buffer(data, 'binary').toString('base64');
-					if(apiRoute == apiSketch){
-						resAlias.setHeader('Content-Type', 'image/jpg');
-						resAlias.writeHead(200);
-						resAlias.end(base64Image); // Send the file data to the browser.
-					} else if(apiRoute == apiModel){
-						cb(base64Image);
+function packImages(files, imageType){
+	resAlias.setHeader('Content-Type', imageType);
+	async.eachSeries(files, function (file, callback) {
+		fs.stat(file, function(err, stats){
+			if(err == null) { //exists
+				console.log(`${file} EXISTS.....`);
+				fs.readFile(file, 'binary', function(err, data) {
+					if (err) { 
+						throw err;
+						console.log("ERROR!!! COMBINING IMAGE FILES.....");
+					} else {
+						var base64Image = new Buffer(data, 'binary').toString('base64');
+						resAlias.write(base64Image+",");
+						console.log("FINISH COMBINING IMAGE FILES.....");
 					}
-				}
-			});	
-		} else if(err.code == 'ENOENT') { //doesn't
-			console.log(`${imageName} DOESN'T EXISTS.....`);
-		}
+					callback(err);
+				});	
+			} else if(err.code == 'ENOENT') { //doesn't
+				console.log(`${file} DOESN'T EXISTS.....`);
+			}
+		});
+	}, function(err, result){
+		resAlias.writeHead(200);
+		resAlias.end();
 	});
 }
+
+// function combineDataAndSend(data1){
+// 	shell.cd(pixModelSketch);
+// 	fs.stat(imageName, function(err, stat) {
+// 		if(err == null) { //exists
+// 			console.log(`${imageName} EXISTS.....`);
+// 			fs.readFile(`${imageName}`, 'binary', function(err, data) {
+// 				if (err) { 
+// 					throw err;
+// 					console.log("ERROR!!! COMBINING IMAGE FILES.....");
+// 				} else {
+// 					console.log("FINISH COMBINING IMAGE FILES.....");
+// 					resAlias.setHeader('Content-Type', 'image/jpg');
+// 					resAlias.writeHead(200);
+// 					var base64Image = new Buffer(data, 'binary').toString('base64');
+// 					base64Image = base64Image + "," + data1;
+// 					resAlias.end(base64Image); // Send the file data to the browser.
+// 					// if (apiRoute == apiModel){
+// 					// 	shell.rm('-rf', imageUploadDir);
+// 					// 	shell.rm('-rf', pixResultsPath);
+// 					// } else if (apiRoute == apiSketch) {
+// 					// 	shell.rm('-rf', imageUploadDir);
+// 					// }
+// 				}
+// 			});	
+// 		} else if(err.code == 'ENOENT') { //doesn't
+// 			console.log(`${imageName} DOESN'T EXISTS.....`);
+// 		}
+// 	});
+// }
+
+// function readAndSendImage(dir, cb){
+// 	console.log("READING IMAGE FILE.....");
+// 	shell.cd(dir);
+// 	fs.stat(imageName, function(err, stat) {
+// 		if(err == null) { //exists
+// 			console.log(`${imageName} EXISTS.....`);
+// 			fs.readFile(`${imageName}`, 'binary', function(err, data) {
+// 				if (err) { 
+// 					throw err;
+// 					console.log("ERROR!!! READING IMAGE FILE.....");
+// 				} else {
+// 					console.log("FINISH READING IMAGE FILE.....");
+// 					var base64Image = new Buffer(data, 'binary').toString('base64');
+// 					if(apiRoute == apiSketch){
+// 						resAlias.setHeader('Content-Type', 'image/jpg');
+// 						resAlias.writeHead(200);
+// 						resAlias.end(base64Image); // Send the file data to the browser.
+// 					} else if(apiRoute == apiModel){
+// 						cb(base64Image);
+// 					}
+// 				}
+// 			});	
+// 		} else if(err.code == 'ENOENT') { //doesn't
+// 			console.log(`${imageName} DOESN'T EXISTS.....`);
+// 		}
+// 	});
+// }
 
 function createFolders(){
 	shell.mkdir("-p", 
