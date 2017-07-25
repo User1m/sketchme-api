@@ -133,7 +133,7 @@ function packImages(files, imageType){
 			}
 		});
 	}, function(err, result){
-		resAlias.writeHead(200);
+		// resAlias.writeHead(200);
 		resAlias.end();
 	});
 }
