@@ -65,8 +65,7 @@ function executeSketchScript(){
 		} else{
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
 			if (apiRoute == apiSketch) {
-				// readAndSendImage(edgePath);
-				packImages([`${edgePath}/${imageName}`], 'image/jpg');
+				packImages([`${edgePath}/${imageName}`, `${facePath}/${imageName}`], 'image/jpg');
 			} else if (apiRoute == apiModel) {
 				runCombineScript();
 			}
@@ -103,7 +102,6 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			// readAndSendImage(pixModelResult, combineDataAndSend);
 			packImages([pixModelSketch, pixModelResult], 'image/jpg');
 			// packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
 		}
@@ -133,7 +131,6 @@ function packImages(files, imageType){
 			}
 		});
 	}, function(err, result){
-		// resAlias.writeHead(200);
 		resAlias.end();
 	});
 }
