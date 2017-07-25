@@ -22,8 +22,9 @@ edgePath = `${imageUploadDir}/edge/test`,
 face2edgePath = `${imageUploadDir}/face2edge/test`,
 pixResultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
 pixPyResultsPath = `${PIX_PATH}/results/${id}`,
-pixModelResult = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
-pixModelSketch = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
+pixModelTarget = `${pixResultsPath}/latest_net_G_test/images/target/${id}.jpg`,
+pixModelOutput = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
+pixModelInput = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
 pixPyModelRealA = `${pixPyResultsPath}/test_latest/images/${id}_real_A.png`,
 pixPyModelRealB = `${pixPyResultsPath}/test_latest/images/${id}_real_B.png`,
 pixPyModelFakeB = `${pixPyResultsPath}/test_latest/images/${id}_fake_B.png`;
@@ -102,7 +103,7 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			packImages([pixModelSketch, pixModelResult], 'image/jpg');
+			packImages([pixModelInput, pixModelOutput, pixModelTarget], 'image/jpg');
 			// packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
 		}
 	});
@@ -136,7 +137,7 @@ function packImages(files, imageType){
 }
 
 // function combineDataAndSend(data1){
-// 	shell.cd(pixModelSketch);
+// 	shell.cd(pixModelInput);
 // 	fs.stat(imageName, function(err, stat) {
 // 		if(err == null) { //exists
 // 			console.log(`${imageName} EXISTS.....`);
