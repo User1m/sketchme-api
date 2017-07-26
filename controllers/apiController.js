@@ -138,64 +138,6 @@ function packImages(files, imageType){
 	});
 }
 
-// function combineDataAndSend(data1){
-// 	shell.cd(pixModelInput);
-// 	fs.stat(imageName, function(err, stat) {
-// 		if(err == null) { //exists
-// 			console.log(`${imageName} EXISTS.....`);
-// 			fs.readFile(`${imageName}`, 'binary', function(err, data) {
-// 				if (err) { 
-// 					throw err;
-// 					console.log("ERROR!!! COMBINING IMAGE FILES.....");
-// 				} else {
-// 					console.log("FINISH COMBINING IMAGE FILES.....");
-// 					resAlias.setHeader('Content-Type', 'image/jpg');
-// 					resAlias.writeHead(200);
-// 					var base64Image = new Buffer(data, 'binary').toString('base64');
-// 					base64Image = base64Image + "," + data1;
-// 					resAlias.end(base64Image); // Send the file data to the browser.
-// 					// if (apiRoute == apiModel){
-// 					// 	shell.rm('-rf', imageUploadDir);
-// 					// 	shell.rm('-rf', pixResultsPath);
-// 					// } else if (apiRoute == apiSketch) {
-// 					// 	shell.rm('-rf', imageUploadDir);
-// 					// }
-// 				}
-// 			});	
-// 		} else if(err.code == 'ENOENT') { //doesn't
-// 			console.log(`${imageName} DOESN'T EXISTS.....`);
-// 		}
-// 	});
-// }
-
-// function readAndSendImage(dir, cb){
-// 	console.log("READING IMAGE FILE.....");
-// 	shell.cd(dir);
-// 	fs.stat(imageName, function(err, stat) {
-// 		if(err == null) { //exists
-// 			console.log(`${imageName} EXISTS.....`);
-// 			fs.readFile(`${imageName}`, 'binary', function(err, data) {
-// 				if (err) { 
-// 					throw err;
-// 					console.log("ERROR!!! READING IMAGE FILE.....");
-// 				} else {
-// 					console.log("FINISH READING IMAGE FILE.....");
-// 					var base64Image = new Buffer(data, 'binary').toString('base64');
-// 					if(apiRoute == apiSketch){
-// 						resAlias.setHeader('Content-Type', 'image/jpg');
-// 						resAlias.writeHead(200);
-// 						resAlias.end(base64Image); // Send the file data to the browser.
-// 					} else if(apiRoute == apiModel){
-// 						cb(base64Image);
-// 					}
-// 				}
-// 			});	
-// 		} else if(err.code == 'ENOENT') { //doesn't
-// 			console.log(`${imageName} DOESN'T EXISTS.....`);
-// 		}
-// 	});
-// }
-
 function createFolders(){
 	shell.mkdir("-p", 
 	imagePath,
