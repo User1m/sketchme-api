@@ -113,7 +113,7 @@ function runValScript(){
 
 
 function packImages(files, imageType){
-	resAlias.setHeader('Content-Type', imageType);
+	// resAlias.setHeader('Content-Type', imageType);
 	async.eachSeries(files, function (file, callback) {
 		fs.stat(file, function(err, stats){
 			if(err == null) { //exists
