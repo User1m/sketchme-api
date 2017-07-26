@@ -135,6 +135,7 @@ function packImages(files, imageType){
 		});
 	}, function(err, result){
 		resAlias.end();
+		console.log("CLEANING UP TEMP FOLDERS.....");
 		shell.rm('-rf', imageUploadDir);
 		shell.rm('-rf', pixPyResultsPath); 
 		// shell.rm('-rf', pixResultsPath); 
