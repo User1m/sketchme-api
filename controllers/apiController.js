@@ -106,7 +106,7 @@ function runValScript(){
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
 			// packImages([pixModelInput, pixModelOutput, pixModelTarget], 'image/jpg');
-			packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
+			packImages([pixPyModelRealA, pixPyModelFakeB, pixPyModelRealB], 'image/png');
 		}
 	});
 }
