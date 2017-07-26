@@ -14,7 +14,7 @@ const WORKSPACE_PATH = "/home/user1m/workspace";
 const API_PATH = `${WORKSPACE_PATH}/api`,
 PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
 
-const model_gen_name = 'small_face2edge_gen';
+const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
 const imageUploadDir = `${API_PATH}/uploads/${id}`;
 const imagePath = `${imageUploadDir}/image`,
 facePath = `${imageUploadDir}/face/test`,
@@ -94,7 +94,9 @@ function runCombineScript(){
 function runValScript(){
 	console.log("RUNNING VAL SCRIPT.....");
 	shell.cd(PIX_PATH);
-	shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
+	// shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
+	// shell.exec(`nohup python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
+	shell.exec(`/home/user1m/anaconda3/bin/python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
@@ -103,8 +105,8 @@ function runValScript(){
 		} else {
 			console.log('Program output:', stdout);
 			console.log("FINISH RUNNING VAL SCRIPT.....");
-			packImages([pixModelInput, pixModelOutput, pixModelTarget], 'image/jpg');
-			// packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
+			// packImages([pixModelInput, pixModelOutput, pixModelTarget], 'image/jpg');
+			packImages([pixPyModelRealA, pixPyModelRealB, pixPyModelFakeB], 'image/png');
 		}
 	});
 }
