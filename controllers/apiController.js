@@ -135,6 +135,9 @@ function packImages(files, imageType){
 		});
 	}, function(err, result){
 		resAlias.end();
+		shell.rm('-rf', imageUploadDir);
+		shell.rm('-rf', pixPyResultsPath); 
+		// shell.rm('-rf', pixResultsPath); 
 	});
 }
 
