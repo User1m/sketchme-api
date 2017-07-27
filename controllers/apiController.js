@@ -7,8 +7,8 @@ const fs = require('fs');
 const PythonShell = require('python-shell');
 const async = require('async');
 
-var id = null; //uuidv1();//uuidv4();
-var imageName = null; //`${id}.jpg`;
+var id = uuidv1();//uuidv4();
+var imageName = `${id}.jpg`;
 
 const WORKSPACE_PATH = "/home/user1m/workspace";
 
@@ -17,7 +17,7 @@ PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
 
 const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
 const imageUploadDir = `${API_PATH}/uploads/${id}`;
-const imagePath = `${imageUploadDir}/image`,
+imagePath = `${imageUploadDir}/image`,
 savedImagesPath = `${API_PATH}/savedImages`,
 facePath = `${imageUploadDir}/face/test`,
 edgePath = `${imageUploadDir}/edge/test`,
@@ -30,6 +30,7 @@ pixModelInput = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
 pixPyModelRealA = `${pixPyResultsPath}/test_latest/images/${id}_real_A.png`,
 pixPyModelRealB = `${pixPyResultsPath}/test_latest/images/${id}_real_B.png`,
 pixPyModelFakeB = `${pixPyResultsPath}/test_latest/images/${id}_fake_B.png`;
+
 
 const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
@@ -193,10 +194,10 @@ exports.generate_sketch = function (req, res, next) {
 
 
 exports.generate_image_from_model = function (req, res, next) {
-	id = uuidv4();
- 	imageName = `${id}.jpg`;
+	// id = uuidv4();
+ 	// imageName = `${id}.jpg`;
 	apiRoute = apiModel;
-	execute(req, res)
+	execute(req, res);
 };
 
 
