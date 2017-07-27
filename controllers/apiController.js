@@ -1,14 +1,14 @@
 'use strict';
 
-const uuidv1 = require('uuid/v1');
+// const uuidv1 = require('uuid/v1');
 const uuidv4 = require('uuid/v4');
 const shell = require('shelljs');
 const fs = require('fs');
 const PythonShell = require('python-shell');
 const async = require('async');
 
-const id = uuidv1();//uuidv4();
-const imageName = `${id}.jpg`;
+var id = null; //uuidv1();//uuidv4();
+var imageName = null; //`${id}.jpg`;
 
 const WORKSPACE_PATH = "/home/user1m/workspace";
 
@@ -193,6 +193,8 @@ exports.generate_sketch = function (req, res, next) {
 
 
 exports.generate_image_from_model = function (req, res, next) {
+	id = uuidv4();
+ 	imageName = `${id}.jpg`;
 	apiRoute = apiModel;
 	execute(req, res)
 };
