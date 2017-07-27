@@ -16,7 +16,7 @@ const API_PATH = `${WORKSPACE_PATH}/api`,
 PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
 
 const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
-const imageUploadDir = `${API_PATH}/uploads/${id}`;
+const imageUploadDir = `${API_PATH}/uploads/${id}`,
 imagePath = `${imageUploadDir}/image`,
 savedImagesPath = `${API_PATH}/savedImages`,
 facePath = `${imageUploadDir}/face/test`,
