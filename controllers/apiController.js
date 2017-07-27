@@ -7,34 +7,32 @@ const fs = require('fs');
 const PythonShell = require('python-shell');
 const async = require('async');
 
-const id = uuidv1();//uuidv4();
-const imageName = `${id}.jpg`;
-
 const WORKSPACE_PATH = "/home/user1m/workspace";
-
+const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
 const API_PATH = `${WORKSPACE_PATH}/api`,
 PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
-
-const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
-const imageUploadDir = `${API_PATH}/uploads/${id}`,
-imagePath = `${imageUploadDir}/image`,
-savedImagesPath = `${API_PATH}/savedImages`,
-facePath = `${imageUploadDir}/face/test`,
-edgePath = `${imageUploadDir}/edge/test`,
-face2edgePath = `${imageUploadDir}/face2edge/test`,
-pixResultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
-pixPyResultsPath = `${PIX_PATH}/results/${id}`,
-pixModelTarget = `${pixResultsPath}/latest_net_G_test/images/target/${id}.jpg`,
-pixModelOutput = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
-pixModelInput = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
-pixPyModelRealA = `${pixPyResultsPath}/test_latest/images/${id}_real_A.png`,
-pixPyModelRealB = `${pixPyResultsPath}/test_latest/images/${id}_real_B.png`,
-pixPyModelFakeB = `${pixPyResultsPath}/test_latest/images/${id}_fake_B.png`;
-
 
 const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
 var resAlias = null;
+
+const id = uuidv1();//uuidv4();
+const imageName = `${id}.jpg`;
+
+var imageUploadDir = '',
+imagePath = '',
+savedImagesPath = '',
+facePath = '',
+edgePath = '',
+face2edgePath = '',
+pixResultsPath = '',
+pixPyResultsPath = '',
+pixModelTarget = '',
+pixModelOutput = '',
+pixModelInput = '',
+pixPyModelRealA = '',
+pixPyModelRealB = '',
+pixPyModelFakeB = '';
 
 
 function saveImageToDisk(data) {
@@ -181,8 +179,28 @@ function readAndProcessImage(req, res){
 	}
 }
 
+function setupVars(){
+	id = uuidv1();//uuidv4();
+	imageName = `${id}.jpg`;
+	imageUploadDir = `${API_PATH}/uploads/${id}`,
+	imagePath = `${imageUploadDir}/image`,
+	savedImagesPath = `${API_PATH}/savedImages`,
+	facePath = `${imageUploadDir}/face/test`,
+	edgePath = `${imageUploadDir}/edge/test`,
+	face2edgePath = `${imageUploadDir}/face2edge/test`,
+	pixResultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
+	pixPyResultsPath = `${PIX_PATH}/results/${id}`,
+	pixModelTarget = `${pixResultsPath}/latest_net_G_test/images/target/${id}.jpg`,
+	pixModelOutput = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
+	pixModelInput = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
+	pixPyModelRealA = `${pixPyResultsPath}/test_latest/images/${id}_real_A.png`,
+	pixPyModelRealB = `${pixPyResultsPath}/test_latest/images/${id}_real_B.png`,
+	pixPyModelFakeB = `${pixPyResultsPath}/test_latest/images/${id}_fake_B.png`;
+}
+
 function execute(req, res){
 	resAlias = res;
+	setupVars();
 	readAndProcessImage(req, res);
 }
 
