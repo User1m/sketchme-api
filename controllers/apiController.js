@@ -16,8 +16,8 @@ const apiSketch = "/sketch", apiModel = "/model";
 var apiRoute = '';
 var resAlias = null;
 
-const id = uuidv1();//uuidv4();
-const imageName = `${id}.jpg`;
+var id = '';
+var imageName = '';
 
 var imageUploadDir = '',
 imagePath = '',
