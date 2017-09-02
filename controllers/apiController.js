@@ -6,8 +6,9 @@ const shell = require('shelljs');
 const fs = require('fs');
 const PythonShell = require('python-shell');
 const async = require('async');
+const pyPath = "/usr/bin/python";
 
-const WORKSPACE_PATH = "/home/user1m/workspace";
+const WORKSPACE_PATH = "/home";
 const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
 const API_PATH = `${WORKSPACE_PATH}/api`,
 PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
@@ -55,7 +56,7 @@ function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
 	//must include pythonPath or python will fail "No Module Named X Found"
 	var options = {
-		pythonPath: '/home/user1m/anaconda3/bin/python',
+		pythonPath: pyPath,
 		pythonOptions: ['-u'],
 		args: [imagePath,facePath,edgePath]
 	};
@@ -98,7 +99,7 @@ function runValScript(){
 	shell.cd(PIX_PATH);
 	// shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
 	// shell.exec(`nohup python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
-	shell.exec(`/home/user1m/anaconda3/bin/python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
+	shell.exec(`${pyPath} /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
