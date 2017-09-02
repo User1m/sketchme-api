@@ -99,7 +99,7 @@ function runValScript(){
 	shell.cd(PIX_PATH);
 	// shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
 	// shell.exec(`nohup python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
-	shell.exec(`${pyPath} /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
+	shell.exec(`${pyPath} ${PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
