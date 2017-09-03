@@ -1,26 +1,25 @@
 'use strict';
 
-const uuidv1 = require('uuid/v1');
-const uuidv4 = require('uuid/v4');
+const uuidv1 = require('uuid/v1'); //timestamp
+const uuidv4 = require('uuid/v4'); //random
 const shell = require('shelljs');
 const fs = require('fs');
 const PythonShell = require('python-shell');
 const async = require('async');
-const pyPath = "/usr/bin/python";
 
-const WORKSPACE_PATH = "/home";
-const model_gen_name = 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
-const API_PATH = `${WORKSPACE_PATH}/api`,
-PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
+const PY_PATH = process.env.PY_PATH || "/usr/bin/python";
+const WORKSPACE_PATH = process.env.WORKSPACE_PATH || "/home";
+const model_gen_name = process.env.MODEL_NAME || 'celebfaces_tr5000_te1500';//'small_face2edge_gen';
+const API_PATH = `${WORKSPACE_PATH}/api`;
+const SKETCH2PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
 
-const apiSketch = "/sketch", apiModel = "/model";
+const sketchAPI = "/sketch", modelAPI = "/model";
 var apiRoute = '';
 var resAlias = null;
 
-var id = '';
-var imageName = '';
-
-var imageUploadDir = '',
+var id = '',
+imageName = '',
+imageUploadDir = '',
 imagePath = '',
 savedImagesPath = '',
 facePath = '',
@@ -56,11 +55,11 @@ function executeSketchScript(){
 	console.log("RUNNING SKETCH SCRIPT.....");
 	//must include pythonPath or python will fail "No Module Named X Found"
 	var options = {
-		pythonPath: pyPath,
+		pythonPath: PY_PATH,
 		pythonOptions: ['-u'],
 		args: [imagePath,facePath,edgePath]
 	};
-	shell.cd(`${PIX_PATH}/dataset/PencilSketch/`)
+	shell.cd(`${SKETCH2PIX_PATH}/dataset/PencilSketch/`)
 	PythonShell.run("gen_sketch_and_gen_resized_face.py", options, 
 	function (err) {
 		if (err){ 
@@ -68,9 +67,9 @@ function executeSketchScript(){
 			console.log("ERROR!!! RUNNING SKETCH SCRIPT.....");
 		} else{
 			console.log("FINISH RUNNING SKETCH SCRIPT.....");
-			if (apiRoute == apiSketch) {
+			if (apiRoute == sketchAPI) {
 				packImages([`${edgePath}/${imageName}`, `${facePath}/${imageName}`], 'image/jpg');
-			} else if (apiRoute == apiModel) {
+			} else if (apiRoute == modelAPI) {
 				runCombineScript();
 			}
 		}
@@ -79,7 +78,7 @@ function executeSketchScript(){
 
 function runCombineScript(){
 	console.log("RUNNING COMBINE SCRIPT.....");
-	shell.cd(`${PIX_PATH}/dataset/`);
+	shell.cd(`${SKETCH2PIX_PATH}/dataset/`);
 	shell.exec(`./combine.sh --path ${imageUploadDir}`, 
 	function(code, stdout, stderr) {
 		if(code != 0){
@@ -96,10 +95,10 @@ function runCombineScript(){
 
 function runValScript(){
 	console.log("RUNNING VAL SCRIPT.....");
-	shell.cd(PIX_PATH);
+	shell.cd(SKETCH2PIX_PATH);
 	// shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
-	// shell.exec(`nohup python /home/user1m/workspace/sketch2pix/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
-	shell.exec(`${pyPath} ${PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
+	// shell.exec(`nohup python  ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
+	shell.exec(`${PY_PATH} ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
 	function(code, stdout, stderr) {
 		if(code != 0){
 			console.log('Exit code:', code);
@@ -189,8 +188,8 @@ function setupVars(){
 	facePath = `${imageUploadDir}/face/test`,
 	edgePath = `${imageUploadDir}/edge/test`,
 	face2edgePath = `${imageUploadDir}/face2edge/test`,
-	pixResultsPath = `${PIX_PATH}/pix2pix/results/${id}`,
-	pixPyResultsPath = `${PIX_PATH}/results/${id}`,
+	pixResultsPath = `${SKETCH2PIX_PATH}/pix2pix/results/${id}`,
+	pixPyResultsPath = `${SKETCH2PIX_PATH}/results/${id}`,
 	pixModelTarget = `${pixResultsPath}/latest_net_G_test/images/target/${id}.jpg`,
 	pixModelOutput = `${pixResultsPath}/latest_net_G_test/images/output/${id}.jpg`,
 	pixModelInput = `${pixResultsPath}/latest_net_G_test/images/input/${id}.jpg`,
@@ -207,7 +206,7 @@ function execute(req, res){
 
 
 exports.generate_sketch = function (req, res, next) {
-	apiRoute = apiSketch;
+	apiRoute = sketchAPI;
 	execute(req, res);
 };
 
@@ -215,7 +214,7 @@ exports.generate_sketch = function (req, res, next) {
 exports.generate_image_from_model = function (req, res, next) {
 	// id = uuidv4();
  	// imageName = `${id}.jpg`;
-	apiRoute = apiModel;
+	apiRoute = modelAPI;
 	execute(req, res);
 };
 

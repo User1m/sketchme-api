@@ -7,7 +7,7 @@
     "start": "PORT=80 node_modules/.bin/nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Claudius Mbemba",
   "license": "ISC",
   "dependencies": {
     "async": "^2.5.0",
@@ -17,6 +17,5 @@
     "python-shell": "^0.4.0",
     "shelljs": "^0.7.8",
     "uuid": "^3.1.0"
-  },
-  "devDependencies": {}
+  }
 }
