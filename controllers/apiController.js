@@ -12,7 +12,7 @@ const WORKSPACE_PATH = process.env.WORKSPACE_PATH || "/home";
 const model_gen_name = process.env.MODEL_NAME || "celebfaces_tr5000_te1500"; //'small_face2edge_gen';
 const API_PATH = `${WORKSPACE_PATH}/api`;
 const SKETCH2PIX_PATH = `${WORKSPACE_PATH}/sketch2pix`;
-const SKETCH_PATH = `${WORKSPACE_PATH}/Sketch`;
+const SKETCH_PATH = `${SKETCH2PIX_PATH}/Sketch`;
 
 const sketchAPI = "/sketch",
   modelAPI = "/model";
