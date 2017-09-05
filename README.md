@@ -3,12 +3,11 @@
 * `npm install`
 * `sudo npm start`
 
-# Running
+# Running Locally
 
 ```
 WORKSPACE_PATH="/home/user1m/workspace" PY_PATH="/home/user1m/anaconda3/bin/python" nodemon server.js
 ```
-
 
 #Testing API via curl
 
