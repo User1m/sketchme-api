@@ -128,7 +128,7 @@ function runValScript() {
       if (code != 0) {
         console.log("Exit code:", code);
         console.log("Program stderr:", stderr);
-        console.log("./test.sh ERRORED OUT");
+        console.log("runValScript ERRORED OUT");
       } else {
         console.log("Program output:", stdout);
         console.log("FINISH RUNNING VAL SCRIPT.....");
