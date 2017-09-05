@@ -24,9 +24,9 @@ var id = "",
   imageUploadDir = "",
   imagePath = "",
   savedImagesPath = "",
-  facePath = "",
+  faceImagePath = "",
   faceImage = "",
-  edgePath = "",
+  edgeImagePath = "",
   edgeImage = "",
   face2edgePath = "",
   pixResultsPath = "",
@@ -58,11 +58,11 @@ function saveImageToDisk(data) {
 function executeSketchScript() {
   console.log("RUNNING SKETCH SCRIPT.....");
   //   shell.exec(
-  //     `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/DrawSketches.py ${imagePath}/${id}.jpg ${edgePath}`,
+  //     `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/DrawSketches.py ${imagePath}/${id}.jpg ${edgeImagePath}`,
   //     function(code, stdout, stderr) {
   //       if (apiRoute == sketchAPI) {
   //         packImages(
-  //           [`${edgePath}/${imageName}`, `${facePath}/${imageName}`],
+  //           [`${edgeImagePath}/${imageName}`, `${faceImagePath}/${imageName}`],
   //           "image/jpg"
   //         );
   //       } else if (apiRoute == modelAPI) {
@@ -74,7 +74,7 @@ function executeSketchScript() {
   var options = {
     pythonPath: PY_PATH,
     pythonOptions: ["-u"],
-    args: [imagePath, facePath, edgePath]
+    args: [imagePath, faceImagePath, edgeImagePath]
   };
   shell.cd(`${SKETCH2PIX_PATH}/dataset/PencilSketch/`);
   PythonShell.run("gen_sketch_and_gen_resized_face.py", options, function(err) {
@@ -85,7 +85,7 @@ function executeSketchScript() {
       console.log("FINISH RUNNING SKETCH SCRIPT.....");
       if (apiRoute == sketchAPI) {
         packImages(
-          [`${edgePath}/${imageName}`, `${facePath}/${imageName}`],
+          [`${edgeImagePath}/${imageName}`, `${faceImagePath}/${imageName}`],
           "image/jpg"
         );
       } else if (apiRoute == modelAPI) {
@@ -123,7 +123,7 @@ function runValScript() {
   // shell.exec(`nohup python  ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
   // shell.exec(`${PY_PATH} ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --gpu_ids -1 --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
   shell.exec(
-    `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/sketchMe.py ${edgeImage} ${faceImage}`,
+    `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/sketchMe.py ${edgeImagePath} ${faceImagePath}`,
     function(code, stdout, stderr) {
       if (code != 0) {
         console.log("Exit code:", code);
@@ -178,7 +178,7 @@ function packImages(files, imageType) {
 }
 
 function createFolders() {
-  shell.mkdir("-p", imagePath, facePath, edgePath, face2edgePath);
+  shell.mkdir("-p", imagePath, faceImagePath, edgeImagePath, face2edgePath);
 }
 
 function readAndProcessImage(req, res) {
@@ -214,10 +214,10 @@ function setupVars() {
   imageUploadDir = `${API_PATH}/uploads/${id}`;
   imagePath = `${imageUploadDir}/image`;
   savedImagesPath = `${API_PATH}/savedImages`;
-  facePath = `${imageUploadDir}/face/test`;
-  faceImage = `${facePath}/${id}.jpg`;
-  edgePath = `${imageUploadDir}/edge/test`;
-  edgeImage = `${edgePath}/${id}.jpg`;
+  faceImagePath = `${imageUploadDir}/face/test`;
+  faceImage = `${faceImagePath}/${id}.jpg`;
+  edgeImagePath = `${imageUploadDir}/edge/test`;
+  edgeImage = `${edgeImagePath}/${id}.jpg`;
   face2edgePath = `${imageUploadDir}/face2edge/test`;
   pixResultsPath = `${SKETCH2PIX_PATH}/pix2pix/results/${id}`;
   pixPyResultsPath = `${SKETCH2PIX_PATH}/results/${id}`;
