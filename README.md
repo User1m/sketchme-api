@@ -9,6 +9,13 @@
 WORKSPACE_PATH="/home/user1m/workspace" PY_PATH="/home/user1m/anaconda3/bin/python" nodemon server.js
 ```
 
+# Change API
+
+```
+tf-model: git checkout master
+pixmodel: git checkout pixmodel
+```
+
 #Testing API via curl
 
 ```sh
