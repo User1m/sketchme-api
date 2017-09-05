@@ -57,19 +57,6 @@ function saveImageToDisk(data) {
 
 function executeSketchScript() {
   console.log("RUNNING SKETCH SCRIPT.....");
-  //   shell.exec(
-  //     `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/DrawSketches.py ${imagePath}/${id}.jpg ${edgeImagePath}`,
-  //     function(code, stdout, stderr) {
-  //       if (apiRoute == sketchAPI) {
-  //         packImages(
-  //           [`${edgeImagePath}/${imageName}`, `${faceImagePath}/${imageName}`],
-  //           "image/jpg"
-  //         );
-  //       } else if (apiRoute == modelAPI) {
-  //         runCombineScript();
-  //       }
-  //     }
-  //   );
   //   must include pythonPath or python will fail "No Module Named X Found"
   var options = {
     pythonPath: PY_PATH,
@@ -89,8 +76,7 @@ function executeSketchScript() {
           "image/jpg"
         );
       } else if (apiRoute == modelAPI) {
-        // runCombineScript();
-        runValScript();
+        runCombineScript();
       }
     }
   });
@@ -121,9 +107,8 @@ function runValScript() {
   shell.cd(SKETCH2PIX_PATH);
   // shell.exec(`./test.sh --data-root ${imageUploadDir}/face2edge --name ${model_gen_name} --direction BtoA --custom_image_dir ${id}`,
   // shell.exec(`nohup python  ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id} > output.log &`,
-  // shell.exec(`${PY_PATH} ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --gpu_ids -1 --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
   shell.exec(
-    `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/sketchMe.py ${edgeImagePath} ${faceImagePath}`,
+    `${PY_PATH} ${SKETCH2PIX_PATH}/pix2pix-pytorch/test.py --dataroot ${imageUploadDir}/face2edge --name ${model_gen_name} --gpu_ids -1 --model pix2pix --which_model_netG unet_256 --which_direction BtoA --dataset_mode aligned --norm batch --display_id 0 --custom_image_dir ${id}`,
     function(code, stdout, stderr) {
       if (code != 0) {
         console.log("Exit code:", code);
@@ -133,8 +118,10 @@ function runValScript() {
         console.log("Program output:", stdout);
         console.log("FINISH RUNNING VAL SCRIPT.....");
         // packImages([pixModelInput, pixModelOutput, pixModelTarget], 'image/jpg');
-        // packImages( [pixPyModelRealA, pixPyModelFakeB, pixPyModelRealB],"image/png" );
-        packImages([edgeImage, sketchModelOutputImage, faceImage], "image/jpg");
+        packImages(
+          [pixPyModelRealA, pixPyModelFakeB, pixPyModelRealB],
+          "image/png"
+        );
       }
     }
   );
@@ -170,8 +157,7 @@ function packImages(files, imageType) {
       resAlias.end();
       console.log("CLEANING UP TEMP FOLDERS.....");
       shell.rm("-rf", imageUploadDir);
-      shell.rm("-rf", sketchModelOutputImage);
-      //   shell.rm("-rf", pixPyResultsPath);
+      shell.rm("-rf", pixPyResultsPath);
       // shell.rm('-rf', pixResultsPath);
     }
   );
@@ -242,8 +228,6 @@ exports.generate_sketch = function(req, res, next) {
 };
 
 exports.generate_image_from_model = function(req, res, next) {
-  // id = uuidv4();
-  // imageName = `${id}.jpg`;
   apiRoute = modelAPI;
   execute(req, res);
 };
