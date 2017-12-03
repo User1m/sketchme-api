@@ -7,3 +7,6 @@ curl -v -i -X POST -H "Content-Type: multipart/form-data" -F "data=@/home/user1m
 #Rest GPU Mem
 sudo fuser -v /dev/nvidia*
 kill -9 PID
+
+#Smart Crop
+py smart_crop.py --width 300 --height 300 testPics/test3.jpg sc3.jpg
