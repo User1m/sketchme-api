@@ -170,10 +170,8 @@ function executeSketchScript() {
 }
 
 function smartCropImage() {
+  console.log("STARTING IMAGE SMART CROP.....");
   shell.cd(SKETCH2PIX_PATH);
-  //given ImagePath
-  //execute py smart_crop.py --width 300 --height 300 INPUT_IMAGE OUTPUT_IMAGE
-  //overwrite current file
   shell.exec(
     `${PY_PATH} ${SKETCH2PIX_PATH}/Sketch/smartcrop.py --width 300 --height 300 ${uploadedImage} ${uploadedImage}`,
     function (code, stdout, stderr) {
@@ -184,7 +182,7 @@ function smartCropImage() {
       } else {
         console.log("Program output:", stdout);
         console.log("FINISH RUNNING SMART CROP SCRIPT.....");
-        shell.cp("-f", imageName, `${savedImagesPath}/${imageName}`);
+        shell.cp("-f", uploadedImage, `${savedImagesPath}/${imageName}`);
         executeSketchScript();
       }
     }
