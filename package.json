@@ -1,12 +1,10 @@
 {
-  "name": "sketchmeapi",
+  "name": "sketchme-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "docker:build": "./scripts/build.sh",
-    "docker:run": "./scripts/run.sh",
-    "start": "nodemon server.js",
+    "start": "forever start -f server.js",
     "start-dev": "nodemon server.js"
   },
   "author": "Claudius Mbemba",
@@ -14,13 +12,13 @@
   "dependencies": {
     "async": "^2.5.0",
     "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
     "express": "^4.15.3",
-    "nodemon": "^1.11.0",
+    "forever": "^0.15.3",
+    "nodemon": "^1.17.3",
     "python-shell": "^0.4.0",
     "shelljs": "^0.7.8",
     "uuid": "^3.1.0"
   },
-  "devDependencies": {
-    "cors": "^2.8.4"
-  }
+  "devDependencies": {}
 }

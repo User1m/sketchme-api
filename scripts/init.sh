@@ -1,7 +1,4 @@
 #!/bin/bash
 
-ln -s /workdir/app/package.json /workdir/package.json
-cd /workdir/ && mkdir uploads savedImages && npm i
-export PATH=/workdir/node_modules/.bin/:$PATH
-cd /workdir/app/ && npm start &
-bash
+mkdir -p /workdir/model/Sketch/results
+cd /workdir/api && npm start
