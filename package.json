@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "forever start -f server.js",
+    "start": "forever -c 'nodemon --exitcrash' server.js",
     "start-dev": "nodemon server.js"
   },
   "author": "Claudius Mbemba",

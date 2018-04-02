@@ -9,6 +9,5 @@ docker run --rm -itd -p 8081:80 \
 	-e PORT=80 \
 	-e WORKSPACE_PATH=/workdir/model \
 	-e PY_PATH=/usr/local/bin/python \
-	-e FQDN=//sketchme-api.azurewebsites.net \
 	--name sketchme-backend \
 	sketchme-backend:prod-$1
